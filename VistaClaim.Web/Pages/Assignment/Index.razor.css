@@ -1,0 +1,13 @@
+﻿.assignment-header {
+    color: red;
+}
+
+.sent-for-approve {
+    color:orange;
+    font-weight:bold;
+}
+
+.completed {
+    color: green;
+    font-weight: bold;
+}

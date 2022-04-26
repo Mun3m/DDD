@@ -1,0 +1,67 @@
+﻿@page "/assignment/index"
+<h1 class="assignment-header">Assignments</h1>
+
+@if (assignments == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a style="float:right;margin:10px;" href="/assignment/create/@ClinetId" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Create New</a>
+
+    <div>
+        <div>
+            <input placeholder="enter claim number" style="width:300px;float:left" class="form-control" id="filter" @bind="@filter" />
+            <button style="margin-left:10px" class="btn btn-primary btn active" @onclick="FilterBy">Filter</button>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Claim Number</th>
+                <th>Client Name</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in assignments)
+            {
+                <tr>
+                    <td>@item.ClaimNumber</td>
+                    <td>@item.ClientName</td>
+                    <td>
+                        @switch (item.Status)
+                        {
+                            case Domain.Entities.AssignmentEntity.Assignment.AssignmentStatus.New:
+                                {
+                                    <span>New</span>
+                                    break;
+                                }
+                            case Domain.Entities.AssignmentEntity.Assignment.AssignmentStatus.SentForApprove:
+                                {
+                                    <span class="sent-for-approve">Sent For Approve</span>
+                                    break;
+                                }
+                            case Domain.Entities.AssignmentEntity.Assignment.AssignmentStatus.Completed:
+                                {
+                                    <span class="completed">Completed</span>
+                                    break;
+                                }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status == Domain.Entities.AssignmentEntity.Assignment.AssignmentStatus.New)
+                        {
+                            <button class="btn btn-primary btn active" @onclick="(async () => await Approve(item.Id))">Approve</button>
+                        }
+                        else if (item.Status == Domain.Entities.AssignmentEntity.Assignment.AssignmentStatus.SentForApprove)
+                        {
+                            <button class="btn btn-primary btn active" @onclick="(async () => await Complete(item.Id))">Complete</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
